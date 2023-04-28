@@ -1,2 +1,17 @@
 # PizzaRestaurantWorkflow
-A test application on WindowsForms using the WorkflowCore library for familiarity purposes.
+
+#### Workflow Core - https://github.com/danielgerlag/workflow-core
+
+#### Данный проект предназначен для знакомства с библиотекой Workflow Core, которая помогает удобно управлять рабочими процессами на .NET
+
+### Функции проекта
+
+<ul>
+    <li>Добавление клиентов</li>
+    <li>Добавление продуктов</li>
+    <li>Добавление курьеров</li>
+    <li>Принятие или отказ заказов кухней</li>
+    <li>Приятие или отказ заказов курьерами</li>
+</ul>
+
+<p>Данный пример необходим для того, чтобы увидеть, как данная библиотека улучшает понимание различных процессов и гибкое управление ими.</p>
