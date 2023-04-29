@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PizzaRestaurant.Services;
-using PizzaRestaurant.Workflow;
-using WorkflowCore.Interface;
 
 namespace PizzaRestaurant;
 
@@ -17,11 +15,6 @@ static class Program
     {
         var builder = CreateHostBuilder().Build();
         ServiceProvider = builder.Services;
-        var workflowHost = ServiceProvider.GetService<IWorkflowHost>();
-        workflowHost.RegisterWorkflow<RestaurantWorkflow, DataPizza>();
-        workflowHost.Start();
-
-        Console.WriteLine("Starting workflow pizza...");
 
         ApplicationConfiguration.Initialize();
         Application.Run(ServiceProvider.GetRequiredService<Form1>());
@@ -35,11 +28,14 @@ static class Program
         return Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                services.AddScoped<DBService>();
-                services.AddScoped<Form1>();
                 services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString));
+                
+                services.AddTransient<DBService>();
+                services.AddTransient<Form1>();
+                
                 services.AddLogging();
-                services.AddWorkflow(x => x.UseSqlServer(connectionString, true, true));
+                services.AddWorkflow();
+                //services.AddWorkflow(x => x.UseSqlServer(connectionString, false, true));
             });
     }
 }
