@@ -10,7 +10,7 @@ public class Step2 : TestBaseStep
     public int Result { get; set; }
     public override async Task<ExecutionResult> RunAsync(IStepExecutionContext context)
     {
-        var model = DbContext.Results.FirstOrDefault(x => x.Result == Result);
+        var model = await DbContext.Results.FirstOrDefaultAsync(x => x.Result == Result);
         MessageBox.Show($"{model.Title} : Result {model.Result}");
         return ExecutionResult.Next();
     }

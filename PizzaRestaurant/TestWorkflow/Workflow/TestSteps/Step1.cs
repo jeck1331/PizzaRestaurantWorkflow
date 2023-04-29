@@ -16,7 +16,7 @@ public class Step1 : TestBaseStep
             Title = HelloWorld,
             Result = Input1
         });
-        DbContext.SaveChanges();
+        await DbContext.SaveChangesAsync();
         return ExecutionResult.Next();
     }
 }
