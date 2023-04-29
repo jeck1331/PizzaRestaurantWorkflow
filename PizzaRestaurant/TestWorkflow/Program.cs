@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PizzaRestaurant.Services;
 
-namespace PizzaRestaurant;
+namespace TestWorkflow;
 
 static class Program
 {
@@ -17,25 +16,24 @@ static class Program
         ServiceProvider = builder.Services;
 
         ApplicationConfiguration.Initialize();
-        Application.Run(ServiceProvider.GetRequiredService<Form1>());
+        Application.Run(ServiceProvider.GetRequiredService<TestWorkflowForm>());
     }
 
     public static IServiceProvider ServiceProvider { get; private set; }
 
     static IHostBuilder CreateHostBuilder()
     {
-        string connectionString = "Server=.;Database=TestPizza;Trusted_Connection=True;TrustServerCertificate=True;";
+        string connectionString = "Server=.;Database=TestPizza2;Trusted_Connection=True;TrustServerCertificate=True;";
         return Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString));
+                services.AddDbContext<TestDbContext>(o => o.UseSqlServer(connectionString));
                 
                 services.AddLogging();
-                services.AddWorkflow();
+                services.AddWorkflow(); 
+                //services.AddWorkflow(x => x.UseSqlServer("Server=.;Database=Workflow;Trusted_Connection=True;TrustServerCertificate=True;", false, true));
                 
-                services.AddTransient<DBService>();
-                services.AddTransient<Form1>();
-                //services.AddWorkflow(x => x.UseSqlServer(connectionString, false, true));
+                services.AddTransient<TestWorkflowForm>();
             });
     }
 }

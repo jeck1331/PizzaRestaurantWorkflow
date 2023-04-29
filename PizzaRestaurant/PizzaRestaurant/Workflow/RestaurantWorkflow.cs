@@ -8,7 +8,7 @@ public class RestaurantWorkflow : IWorkflow<DataPizza>
     public void Build(IWorkflowBuilder<DataPizza> builder)
     {
         builder
-            .If(x => x.ClientId != 0).Do(x => x
+            .If(x => x.ClientId != null).Do(x => x
                 .StartWith<OrderStep>()
                 .Input(step => step.ClientId, data => data.ClientId)
                 .Input(step => step.OrderProductId, data => data.ProductId)

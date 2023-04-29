@@ -17,7 +17,6 @@ public class OrderStep : BaseStep
     public ProductState ProductState { get; set; }
     public override async Task<ExecutionResult> RunAsync(IStepExecutionContext context)
     {
-        MessageBox.Show("GOOOO");
         var product = await DbContext.Products.FirstOrDefaultAsync(x => x.Id == OrderProductId);
 
         if (product is not null)
