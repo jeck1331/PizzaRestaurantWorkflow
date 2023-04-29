@@ -14,7 +14,7 @@ public partial class TestWorkflowForm : Form
     public TestWorkflowForm(IServiceProvider serviceProvider)
     {
         var workflowHost = serviceProvider.GetService<IWorkflowHost>();
-        workflowHost.RegisterWorkflow<Workflow.TestWorkflow, DataTest>();
+        workflowHost.RegisterWorkflow<TestWorkflowDbContext, DataTest>();
         workflowHost.Start();
         InitializeComponent();
         _workflowHost = serviceProvider.GetService<IWorkflowHost>()!;

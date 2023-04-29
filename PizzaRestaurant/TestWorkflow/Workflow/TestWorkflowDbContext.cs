@@ -3,7 +3,7 @@ using WorkflowCore.Interface;
 
 namespace TestWorkflow.Workflow;
 
-public class TestWorkflow : IWorkflow<DataTest>
+public class TestWorkflowDbContext : IWorkflow<DataTest>
 {
     public void Build(IWorkflowBuilder<DataTest> builder)
     {
