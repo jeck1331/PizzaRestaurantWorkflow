@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TestWorkflow.Workflow.TestSteps;
 
 namespace TestWorkflow;
 
@@ -27,12 +28,16 @@ static class Program
         return Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                services.AddDbContext<TestDbContext>(o => o.UseSqlServer(connectionString));
+
+                services.AddDbContext<TestDbContext>(o => o.UseSqlServer(connectionString),
+                    contextLifetime: ServiceLifetime.Transient);
                 
-                services.AddLogging();
                 services.AddWorkflow(); 
-                //services.AddWorkflow(x => x.UseSqlServer("Server=.;Database=Workflow;Trusted_Connection=True;TrustServerCertificate=True;", false, true));
+                services.AddLogging();
                 
+                //services.AddWorkflow(x => x.UseSqlServer("Server=.;Database=Workflow;Trusted_Connection=True;TrustServerCertificate=True;", false, true));
+                services.AddTransient<Step1>();
+                services.AddTransient<Step2>();
                 services.AddTransient<TestWorkflowForm>();
             });
     }

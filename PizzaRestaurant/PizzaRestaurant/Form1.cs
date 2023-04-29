@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PizzaRestaurant.Models;
+using PizzaRestaurant.Models.DTO;
 using PizzaRestaurant.Models.Enums;
 using PizzaRestaurant.Services;
 using PizzaRestaurant.Workflow;
@@ -13,6 +15,7 @@ public partial class Form1 : Form
     private readonly AppDbContext _dbContext;
     private readonly IWorkflowHost _workflowHost;
     private readonly DBService _dbService;
+    private readonly IMapper _mapper;
 
     private string _currentWorkflowId = "RestaurantWorkflow";
     private string _workflowId = "";
@@ -20,24 +23,23 @@ public partial class Form1 : Form
     private int? _selectedProductId = null;
     private int? _selectedClientId = null;
 
-    public Form1(AppDbContext dbContext, DBService dbService, IServiceProvider serviceProvider)
+    public Form1(AppDbContext dbContext, DBService dbService, IServiceProvider serviceProvider, IMapper mapper)
     {
-        var workflowHost = serviceProvider.GetService<IWorkflowHost>();
-        workflowHost?.RegisterWorkflow<RestaurantWorkflow, DataPizza>();
-        //workflowHost?.RegisterWorkflow<TestWorkflow, DataTest>();
-        workflowHost.Start();
-        InitializeComponent();
+        _workflowHost = serviceProvider.GetService<IWorkflowHost>();
+        _workflowHost?.RegisterWorkflow<RestaurantWorkflow, DataPizza>();
+        _workflowHost.Start();
+
         _dbContext = dbContext;
         _dbService = dbService;
-        _workflowHost = serviceProvider.GetService<IWorkflowHost>()!;
+        _mapper = mapper;
+
+        InitializeComponent();
     }
 
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        dataClients.DataSource = _dbContext.Clients.ToList();
-        dataCouriers.DataSource = _dbContext.Couriers.ToList();
-        dataProducts.DataSource = _dbContext.Products.ToList();
+        RefreshData();
     }
 
     private async void btnAddClient_Click(object sender, EventArgs e)
@@ -103,44 +105,12 @@ public partial class Form1 : Form
         RefreshData();
     }
 
-    private void btnCancelProd_Click(object sender, EventArgs e)
-    {
-    }
-
-    private void btnBeginProd_Click(object sender, EventArgs e)
-    {
-    }
-
-    private async void btnDoneProd_Click(object sender, EventArgs e)
-    {
-    }
-
-    private void btnTermProd_Click(object sender, EventArgs e)
-    {
-    }
-
     //Курьеры
     private async void btnAcceptCor_Click(object sender, EventArgs e)
     {
         var courier = await _dbContext.Couriers.FirstOrDefaultAsync(x => x.Id == _selectedCourierId);
         await _workflowHost.PublishEvent("AcceptCourier", _workflowId, courier?.Id);
         RefreshData();
-    }
-
-    private void btnCancelCor_Click(object sender, EventArgs e)
-    {
-    }
-
-    private void btnBeginCor_Click(object sender, EventArgs e)
-    {
-    }
-
-    private void btnDeliverCor_Click(object sender, EventArgs e)
-    {
-    }
-
-    private void btnTermCor_Click(object sender, EventArgs e)
-    {
     }
 
     void VisibleDataGrid(ViewDataGrid state)
@@ -179,30 +149,38 @@ public partial class Form1 : Form
         boxCouriersState.Visible = visible;
         boxKithcenState.Visible = visible;
     }
+
+    void DeleteBtnsEnabled()
+    {
+        btnDelCourier.Enabled = _selectedCourierId != null;
+        btnDelClient.Enabled = _selectedClientId != null;
+        btnDelProduct.Enabled = _selectedProductId != null;
+
+        lbClient.Text = _selectedClientId == null ? "" : _selectedClientId.ToString();
+        lbCourier.Text = _selectedCourierId == null ? "" : _selectedCourierId.ToString();
+        lbProduct.Text = _selectedProductId == null ? "" : _selectedProductId.ToString();
+    }
     private void dataCouriers_MouseClick(object sender, MouseEventArgs e)
     {
-        var courier = (Courier)dataCouriers.CurrentRow.DataBoundItem;
+        var courier = (CourierDTO)dataCouriers.CurrentRow.DataBoundItem;
         _selectedCourierId = courier.Id;
-        btnDelCourier.Enabled = true;
+        DeleteBtnsEnabled();
         tbNumCourier.Text = courier.Id.ToString();
-        lbCourier.Text = courier.Id.ToString();
     }
 
     private void dataProducts_MouseClick(object sender, MouseEventArgs e)
     {
-        var product = (Product)dataProducts.CurrentRow.DataBoundItem;
+        var product = (ProductDTO)dataProducts.CurrentRow.DataBoundItem;
         _selectedProductId = product.Id;
-        btnDelProduct.Enabled = true;
+        DeleteBtnsEnabled();
         tbNumProd.Text = product.Id.ToString();
-        lbProduct.Text = product.Id.ToString();
     }
 
     private void dataClients_MouseClick(object sender, MouseEventArgs e)
     {
-        var client = (Client)dataClients.CurrentRow.DataBoundItem;
+        var client = (ClientDTO)dataClients.CurrentRow.DataBoundItem;
         _selectedClientId = client.Id;
-        btnDelClient.Enabled = true;
-        lbClient.Text = client.Id.ToString();
+        DeleteBtnsEnabled();
     }
 
     private void btnRefresh_Click(object sender, EventArgs e)
@@ -212,31 +190,36 @@ public partial class Form1 : Form
 
     async void RefreshData()
     {
-        dataCouriers.DataSource = await _dbContext.Couriers.ToListAsync();
-        dataProducts.DataSource = await _dbContext.Products.ToListAsync();
-        dataClients.DataSource = await _dbContext.Clients.ToListAsync();
-    }
+        var couriers = await _dbService.Couriers();
+        var products = await _dbService.Products();
+        var clients = await _dbService.Clients();
 
-    private void form_Closing(object sender, EventArgs e)
-    {
-        // _workflowHost.Stop();
+        dataCouriers.DataSource = _mapper.Map<List<CourierDTO>>(couriers);
+        dataProducts.DataSource = _mapper.Map<List<ProductDTO>>(products);
+        dataClients.DataSource = _mapper.Map<List<ClientDTO>>(clients);
     }
 
     private async void btnDelClient_Click(object sender, EventArgs e)
     {
         await _dbService.DeleteClientAsync(_selectedClientId ?? 0);
+        _selectedClientId = null;
+        DeleteBtnsEnabled();
         RefreshData();
     }
 
     private async void btnDelProduct_Click(object sender, EventArgs e)
     {
         await _dbService.DeleteProductAsync(_selectedProductId ?? 0);
+        _selectedProductId = null;
+        DeleteBtnsEnabled();
         RefreshData();
     }
 
     private async void btnDelCourier_Click(object sender, EventArgs e)
     {
         await _dbService.DeleteCourierAsync(_selectedCourierId ?? 0);
+        _selectedCourierId = null;
+        DeleteBtnsEnabled();
         RefreshData();
     }
 }

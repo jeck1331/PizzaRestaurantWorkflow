@@ -20,5 +20,6 @@ public abstract class BaseStep : IStepBody
     
     //Input
     public int ClientId { get; set; }
+    
     public abstract Task<ExecutionResult> RunAsync(IStepExecutionContext context);
 }

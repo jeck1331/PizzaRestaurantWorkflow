@@ -17,7 +17,7 @@ public class DeliveryStep: BaseStep
     public ProductState ProductState { get; set; }
     public CourierState CourierState { get; set; }
     public bool Success { get; set; }
-    public string? Error { get; set; }
+    public string? Message { get; set; }
 
     public override async Task<ExecutionResult> RunAsync(IStepExecutionContext context)
     {
@@ -29,21 +29,24 @@ public class DeliveryStep: BaseStep
         {
             ProductState = ProductState.Failed;
             Success = false;
-            Error = "Курьер уволился или не существует";
+            Message = "Курьер уволился или не существует";
+            MessageBox.Show(Message);
             return ExecutionResult.Next();
         }
         if (product is null)
         {
             ProductState = ProductState.Failed;
             Success = false;
-            Error = "Продукт пропал или уничтожен";
+            Message = "Продукт пропал или уничтожен";
+            MessageBox.Show(Message);
             return ExecutionResult.Next();
         }
-        courier.Products?.Add(product);
+        
+        courier.Products.Add(product);
         int time = rnd.Next(5000, 15000);
         ProductState = ProductState.Delivered;
         CourierState = CourierState.Accept;
-        await DbService.ChangeProductState(ProductId, ProductState);
+        await DbService.ChangeProductState(ProductId, ProductState, ClientId, CourierId);
         await DbService.ChangeCourierState(CourierId, CourierState);
         Thread.Sleep(rnd.Next(1000, 3000));
         
@@ -54,11 +57,15 @@ public class DeliveryStep: BaseStep
         CourierState = time > 14000 ? CourierState.Terminated : CourierState.Done;
         await DbService.ChangeCourierState(CourierId, CourierState);
         ProductState = CourierState == CourierState.Terminated ? ProductState.Terminated : ProductState.Completed;
-        await DbService.ChangeProductState(ProductId, ProductState);
+        await DbService.ChangeProductState(ProductId, ProductState, ClientId);
         
         Success = CourierState == CourierState.Done && ProductState == ProductState.Completed;
-        Error = Success ? "Продукт успешно доствален!" : "Время доставки истекло, курьер не справился с задачей, поэтому заказ был отменен";
-        MessageBox.Show(Error);
+        Message = Success ? "Продукт успешно доствален!" : "Время доставки истекло, курьер не справился с задачей, поэтому заказ был отменен";
+        MessageBox.Show(Message);
+        
+        CourierState = CourierState.Free;
+        await DbService.ChangeCourierState(CourierId, CourierState);
+        
         return ExecutionResult.Next();
     }
 }

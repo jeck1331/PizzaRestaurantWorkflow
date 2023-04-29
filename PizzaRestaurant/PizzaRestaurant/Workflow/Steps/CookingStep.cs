@@ -24,13 +24,13 @@ public class CookingStep : BaseStep
         if (product is not null)
         {
             int time = rnd.Next(5000, 15000);
-            await DbService.ChangeProductState(ProductId, ProductState.GettingReady);
+            await DbService.ChangeProductState(ProductId, ProductState.GettingReady, ClientId);
             
             Thread.Sleep(time);
             
             ProductState = time > 12000 ? ProductState.Terminated : ProductState.Ready;
             
-            await DbService.ChangeProductState(ProductId, ProductState);
+            await DbService.ChangeProductState(ProductId, ProductState, ClientId);
         }
         return ExecutionResult.Next();
     }

@@ -26,10 +26,11 @@ public partial class TestWorkflowForm : Form
     
     private async void btnStart_Click(object sender, EventArgs e)
     {
+        var rnd = new Random();
         _workflowId = await _workflowHost.StartWorkflow(_currentWorkflowId, new DataTest
         {
-            HelloWorld = "QWEqweqweqw",
-            Result = 120
+            HelloWorld = "Hello",
+            Result = rnd.Next(1, 1200)
         });
     }
 }

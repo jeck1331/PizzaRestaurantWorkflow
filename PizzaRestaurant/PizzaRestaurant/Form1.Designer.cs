@@ -31,18 +31,11 @@ partial class Form1
     {
         groupBox1 = new GroupBox();
         boxCouriersState = new GroupBox();
-        btnTermCor = new Button();
-        btnCancelCor = new Button();
-        btnDeliverCor = new Button();
         label5 = new Label();
         tbNumCourier = new TextBox();
         btnAcceptCor = new Button();
         btnChangeStates = new Button();
         boxKithcenState = new GroupBox();
-        btnTermProd = new Button();
-        btnCancelProd = new Button();
-        btnDoneProd = new Button();
-        btnBeginProd = new Button();
         label4 = new Label();
         tbNumProd = new TextBox();
         btnAcceptProd = new Button();
@@ -60,6 +53,9 @@ partial class Form1
         label1 = new Label();
         btnAddClient = new Button();
         groupBox2 = new GroupBox();
+        btnDelCourier = new Button();
+        btnDelProduct = new Button();
+        btnDelClient = new Button();
         btnRefresh = new Button();
         lbCourier = new Label();
         lbProduct = new Label();
@@ -73,9 +69,6 @@ partial class Form1
         dataProducts = new DataGridView();
         dataCouriers = new DataGridView();
         dataClients = new DataGridView();
-        btnDelClient = new Button();
-        btnDelProduct = new Button();
-        btnDelCourier = new Button();
         groupBox1.SuspendLayout();
         boxCouriersState.SuspendLayout();
         boxKithcenState.SuspendLayout();
@@ -108,9 +101,6 @@ partial class Form1
         // 
         // boxCouriersState
         // 
-        boxCouriersState.Controls.Add(btnTermCor);
-        boxCouriersState.Controls.Add(btnCancelCor);
-        boxCouriersState.Controls.Add(btnDeliverCor);
         boxCouriersState.Controls.Add(label5);
         boxCouriersState.Controls.Add(tbNumCourier);
         boxCouriersState.Controls.Add(btnAcceptCor);
@@ -118,44 +108,11 @@ partial class Form1
         boxCouriersState.Margin = new Padding(3, 4, 3, 4);
         boxCouriersState.Name = "boxCouriersState";
         boxCouriersState.Padding = new Padding(3, 4, 3, 4);
-        boxCouriersState.Size = new Size(445, 144);
+        boxCouriersState.Size = new Size(274, 144);
         boxCouriersState.TabIndex = 7;
         boxCouriersState.TabStop = false;
         boxCouriersState.Text = "Курьеры";
         boxCouriersState.Visible = false;
-        // 
-        // btnTermCor
-        // 
-        btnTermCor.Location = new Point(186, 105);
-        btnTermCor.Margin = new Padding(3, 4, 3, 4);
-        btnTermCor.Name = "btnTermCor";
-        btnTermCor.Size = new Size(122, 31);
-        btnTermCor.TabIndex = 6;
-        btnTermCor.Text = "Просрочен";
-        btnTermCor.UseVisualStyleBackColor = true;
-        btnTermCor.Click += btnTermCor_Click;
-        // 
-        // btnCancelCor
-        // 
-        btnCancelCor.Location = new Point(7, 109);
-        btnCancelCor.Margin = new Padding(3, 4, 3, 4);
-        btnCancelCor.Name = "btnCancelCor";
-        btnCancelCor.Size = new Size(160, 31);
-        btnCancelCor.TabIndex = 5;
-        btnCancelCor.Text = "Отменить";
-        btnCancelCor.UseVisualStyleBackColor = true;
-        btnCancelCor.Click += btnCancelCor_Click;
-        // 
-        // btnDeliverCor
-        // 
-        btnDeliverCor.Location = new Point(186, 72);
-        btnDeliverCor.Margin = new Padding(3, 4, 3, 4);
-        btnDeliverCor.Name = "btnDeliverCor";
-        btnDeliverCor.Size = new Size(122, 31);
-        btnDeliverCor.TabIndex = 4;
-        btnDeliverCor.Text = "Доставлен";
-        btnDeliverCor.UseVisualStyleBackColor = true;
-        btnDeliverCor.Click += btnDeliverCor_Click;
         // 
         // label5
         // 
@@ -168,18 +125,18 @@ partial class Form1
         // 
         // tbNumCourier
         // 
-        tbNumCourier.Location = new Point(133, 29);
+        tbNumCourier.Location = new Point(145, 30);
         tbNumCourier.Margin = new Padding(3, 4, 3, 4);
         tbNumCourier.Name = "tbNumCourier";
-        tbNumCourier.Size = new Size(74, 27);
+        tbNumCourier.Size = new Size(107, 27);
         tbNumCourier.TabIndex = 1;
         // 
         // btnAcceptCor
         // 
-        btnAcceptCor.Location = new Point(7, 72);
+        btnAcceptCor.Location = new Point(15, 82);
         btnAcceptCor.Margin = new Padding(3, 4, 3, 4);
         btnAcceptCor.Name = "btnAcceptCor";
-        btnAcceptCor.Size = new Size(160, 31);
+        btnAcceptCor.Size = new Size(237, 31);
         btnAcceptCor.TabIndex = 0;
         btnAcceptCor.Text = "Принять заказ";
         btnAcceptCor.UseVisualStyleBackColor = true;
@@ -198,10 +155,6 @@ partial class Form1
         // 
         // boxKithcenState
         // 
-        boxKithcenState.Controls.Add(btnTermProd);
-        boxKithcenState.Controls.Add(btnCancelProd);
-        boxKithcenState.Controls.Add(btnDoneProd);
-        boxKithcenState.Controls.Add(btnBeginProd);
         boxKithcenState.Controls.Add(label4);
         boxKithcenState.Controls.Add(tbNumProd);
         boxKithcenState.Controls.Add(btnAcceptProd);
@@ -209,55 +162,11 @@ partial class Form1
         boxKithcenState.Margin = new Padding(3, 4, 3, 4);
         boxKithcenState.Name = "boxKithcenState";
         boxKithcenState.Padding = new Padding(3, 4, 3, 4);
-        boxKithcenState.Size = new Size(445, 152);
+        boxKithcenState.Size = new Size(274, 152);
         boxKithcenState.TabIndex = 2;
         boxKithcenState.TabStop = false;
         boxKithcenState.Text = "Кухня";
         boxKithcenState.Visible = false;
-        // 
-        // btnTermProd
-        // 
-        btnTermProd.Location = new Point(207, 100);
-        btnTermProd.Margin = new Padding(3, 4, 3, 4);
-        btnTermProd.Name = "btnTermProd";
-        btnTermProd.Size = new Size(122, 31);
-        btnTermProd.TabIndex = 6;
-        btnTermProd.Text = "Просрочен";
-        btnTermProd.UseVisualStyleBackColor = true;
-        btnTermProd.Click += btnTermProd_Click;
-        // 
-        // btnCancelProd
-        // 
-        btnCancelProd.Location = new Point(15, 100);
-        btnCancelProd.Margin = new Padding(3, 4, 3, 4);
-        btnCancelProd.Name = "btnCancelProd";
-        btnCancelProd.Size = new Size(160, 31);
-        btnCancelProd.TabIndex = 5;
-        btnCancelProd.Text = "Отменить";
-        btnCancelProd.UseVisualStyleBackColor = true;
-        btnCancelProd.Click += btnCancelProd_Click;
-        // 
-        // btnDoneProd
-        // 
-        btnDoneProd.Location = new Point(207, 67);
-        btnDoneProd.Margin = new Padding(3, 4, 3, 4);
-        btnDoneProd.Name = "btnDoneProd";
-        btnDoneProd.Size = new Size(122, 31);
-        btnDoneProd.TabIndex = 4;
-        btnDoneProd.Text = "Приготовлено";
-        btnDoneProd.UseVisualStyleBackColor = true;
-        btnDoneProd.Click += btnDoneProd_Click;
-        // 
-        // btnBeginProd
-        // 
-        btnBeginProd.Location = new Point(207, 33);
-        btnBeginProd.Margin = new Padding(3, 4, 3, 4);
-        btnBeginProd.Name = "btnBeginProd";
-        btnBeginProd.Size = new Size(122, 31);
-        btnBeginProd.TabIndex = 3;
-        btnBeginProd.Text = "Начать готовить";
-        btnBeginProd.UseVisualStyleBackColor = true;
-        btnBeginProd.Click += btnBeginProd_Click;
         // 
         // label4
         // 
@@ -270,18 +179,18 @@ partial class Form1
         // 
         // tbNumProd
         // 
-        tbNumProd.Location = new Point(101, 29);
+        tbNumProd.Location = new Point(145, 33);
         tbNumProd.Margin = new Padding(3, 4, 3, 4);
         tbNumProd.Name = "tbNumProd";
-        tbNumProd.Size = new Size(74, 27);
+        tbNumProd.Size = new Size(107, 27);
         tbNumProd.TabIndex = 1;
         // 
         // btnAcceptProd
         // 
-        btnAcceptProd.Location = new Point(15, 68);
+        btnAcceptProd.Location = new Point(15, 89);
         btnAcceptProd.Margin = new Padding(3, 4, 3, 4);
         btnAcceptProd.Name = "btnAcceptProd";
-        btnAcceptProd.Size = new Size(160, 31);
+        btnAcceptProd.Size = new Size(237, 31);
         btnAcceptProd.TabIndex = 0;
         btnAcceptProd.Text = "Принять заказ";
         btnAcceptProd.UseVisualStyleBackColor = true;
@@ -451,6 +360,39 @@ partial class Form1
         groupBox2.TabStop = false;
         groupBox2.Text = "Данные";
         // 
+        // btnDelCourier
+        // 
+        btnDelCourier.Enabled = false;
+        btnDelCourier.Location = new Point(195, 520);
+        btnDelCourier.Name = "btnDelCourier";
+        btnDelCourier.Size = new Size(94, 29);
+        btnDelCourier.TabIndex = 15;
+        btnDelCourier.Text = "Удалить";
+        btnDelCourier.UseVisualStyleBackColor = true;
+        btnDelCourier.Click += btnDelCourier_Click;
+        // 
+        // btnDelProduct
+        // 
+        btnDelProduct.Enabled = false;
+        btnDelProduct.Location = new Point(195, 473);
+        btnDelProduct.Name = "btnDelProduct";
+        btnDelProduct.Size = new Size(94, 29);
+        btnDelProduct.TabIndex = 14;
+        btnDelProduct.Text = "Удалить";
+        btnDelProduct.UseVisualStyleBackColor = true;
+        btnDelProduct.Click += btnDelProduct_Click;
+        // 
+        // btnDelClient
+        // 
+        btnDelClient.Enabled = false;
+        btnDelClient.Location = new Point(195, 427);
+        btnDelClient.Name = "btnDelClient";
+        btnDelClient.Size = new Size(94, 29);
+        btnDelClient.TabIndex = 13;
+        btnDelClient.Text = "Удалить";
+        btnDelClient.UseVisualStyleBackColor = true;
+        btnDelClient.Click += btnDelClient_Click;
+        // 
         // btnRefresh
         // 
         btnRefresh.Location = new Point(174, 582);
@@ -585,39 +527,6 @@ partial class Form1
         dataClients.TabIndex = 0;
         dataClients.MouseClick += dataClients_MouseClick;
         // 
-        // btnDelClient
-        // 
-        btnDelClient.Enabled = false;
-        btnDelClient.Location = new Point(195, 427);
-        btnDelClient.Name = "btnDelClient";
-        btnDelClient.Size = new Size(94, 29);
-        btnDelClient.TabIndex = 13;
-        btnDelClient.Text = "Удалить";
-        btnDelClient.UseVisualStyleBackColor = true;
-        btnDelClient.Click += btnDelClient_Click;
-        // 
-        // btnDelProduct
-        // 
-        btnDelProduct.Enabled = false;
-        btnDelProduct.Location = new Point(195, 473);
-        btnDelProduct.Name = "btnDelProduct";
-        btnDelProduct.Size = new Size(94, 29);
-        btnDelProduct.TabIndex = 14;
-        btnDelProduct.Text = "Удалить";
-        btnDelProduct.UseVisualStyleBackColor = true;
-        btnDelProduct.Click += btnDelProduct_Click;
-        // 
-        // btnDelCourier
-        // 
-        btnDelCourier.Enabled = false;
-        btnDelCourier.Location = new Point(195, 520);
-        btnDelCourier.Name = "btnDelCourier";
-        btnDelCourier.Size = new Size(94, 29);
-        btnDelCourier.TabIndex = 15;
-        btnDelCourier.Text = "Удалить";
-        btnDelCourier.UseVisualStyleBackColor = true;
-        btnDelCourier.Click += btnDelCourier_Click;
-        // 
         // Form1
         // 
         AutoScaleDimensions = new SizeF(8F, 20F);
@@ -628,7 +537,6 @@ partial class Form1
         Margin = new Padding(3, 4, 3, 4);
         Name = "Form1";
         Text = "Workflow";
-        FormClosing += form_Closing;
         groupBox1.ResumeLayout(false);
         boxCouriersState.ResumeLayout(false);
         boxCouriersState.PerformLayout();
@@ -673,17 +581,10 @@ partial class Form1
     private Button btnChangeStates;
     private Button btnAddEntries;
     private GroupBox boxKithcenState;
-    private Button btnTermProd;
-    private Button btnCancelProd;
-    private Button btnDoneProd;
-    private Button btnBeginProd;
     private Label label4;
     private TextBox tbNumProd;
     private Button btnAcceptProd;
     private GroupBox boxCouriersState;
-    private Button btnTermCor;
-    private Button btnCancelCor;
-    private Button btnDeliverCor;
     private Label label5;
     private TextBox tbNumCourier;
     private Button btnAcceptCor;

@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PizzaRestaurant.Mapping;
 using PizzaRestaurant.Services;
+using PizzaRestaurant.Workflow.Steps;
 
 namespace PizzaRestaurant;
 
@@ -25,17 +27,26 @@ static class Program
     static IHostBuilder CreateHostBuilder()
     {
         string connectionString = "Server=.;Database=TestPizza;Trusted_Connection=True;TrustServerCertificate=True;";
+        //string workflowConnectionString = "Server=.;Database=WorkflowPizza;Trusted_Connection=True;TrustServerCertificate=True;";
+        
         return Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString));
+                services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString),
+                    contextLifetime: ServiceLifetime.Transient);
                 
+                services.AddAutoMapper(typeof(WorkflowProfile));
                 services.AddLogging();
                 services.AddWorkflow();
-                
+                //services.AddWorkflow(x => x.UseSqlServer(workflowConnectionString, false, true));
+
+                //Register steps to DI container
+                services.AddTransient<OrderStep>();
+                services.AddTransient<CookingStep>();
+                services.AddTransient<DeliveryStep>();
+
                 services.AddTransient<DBService>();
                 services.AddTransient<Form1>();
-                //services.AddWorkflow(x => x.UseSqlServer(connectionString, false, true));
             });
     }
 }

@@ -9,5 +9,5 @@ public class Courier
     public CourierState? State { get; set; }
     
     public int? ProductId { get; set; }
-    public ICollection<Product>? Products { get; set; } = null!;
+    public ICollection<Product> Products { get; set; } = new List<Product>();
 }

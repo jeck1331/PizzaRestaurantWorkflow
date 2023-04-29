@@ -23,8 +23,7 @@ public class OrderStep : BaseStep
         {
             ProductState = ProductState.Accept;
             
-            await DbService.ChangeProductState(OrderProductId, ProductState);
-            await DbService.SetClientProduct(ClientId, product);
+            await DbService.ChangeProductState(OrderProductId, ProductState, ClientId);
         }
         
         return ExecutionResult.Next();
