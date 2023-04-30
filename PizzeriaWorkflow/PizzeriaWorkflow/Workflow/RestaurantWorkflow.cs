@@ -1,4 +1,5 @@
-﻿using PizzeriaWorkflow.Workflow.Steps;
+﻿using PizzeriaWorkflow.Models.Enums;
+using PizzeriaWorkflow.Workflow.Steps;
 using WorkflowCore.Interface;
 
 namespace PizzeriaWorkflow.Workflow;
@@ -17,9 +18,11 @@ public class RestaurantWorkflow : IWorkflow<DataPizza>
                 .Input(step => step.ClientId, data => data.ClientId)
                 .Input(step => step.ProductId, data => data.ProductId)
                 .Output(data => data.ProductState, step => step.ProductState)
-                    .WaitFor("AcceptCourier", (data, context) => context.Workflow.Id, data => DateTime.Now)
-                        .Output(data => data.CourierId, step => step.EventData)
-            .Then<DeliveryStep>()
+            .If(x => x.ProductState != ProductState.Terminated)
+            .Do(x => x
+                .WaitFor("AcceptCourier", (data, context) => context.Workflow.Id, data => DateTime.Now)
+                .Output(data => data.CourierId, step => step.EventData)
+                .Then<DeliveryStep>()
                 .Input(step => step.ClientId, data => data.ClientId)
                 .Input(step => step.CourierId, data => data.CourierId)
                 .Input(step => step.ProductId, data => data.ProductId)
@@ -27,6 +30,7 @@ public class RestaurantWorkflow : IWorkflow<DataPizza>
                 .Output(data => data.ProductState, step => step.ProductState)
                 .Output(data => data.Success, step => step.Success)
                 .Output(data => data.Message, step => step.Message)
+            )
             .EndWorkflow();
     }
 
