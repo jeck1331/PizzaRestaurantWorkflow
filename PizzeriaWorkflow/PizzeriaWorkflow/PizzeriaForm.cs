@@ -75,17 +75,17 @@ public partial class PizzeriaForm : Form
 
     private void btnClientView_Click(object sender, EventArgs e)
     {
-        VisibleDataGrid(ViewDataGrid.Clients);
+        //VisibleDataGrid(ViewDataGrid.Clients);
     }
 
     private void btnCouriersView_Click(object sender, EventArgs e)
     {
-        VisibleDataGrid(ViewDataGrid.Couriers);
+        //VisibleDataGrid(ViewDataGrid.Couriers);
     }
 
     private void btnProductsView_Click(object sender, EventArgs e)
     {
-        VisibleDataGrid(ViewDataGrid.Products);
+        //(ViewDataGrid.Products);
     }
 
     private void btnAddEntries_Click(object sender, EventArgs e)
@@ -101,7 +101,7 @@ public partial class PizzeriaForm : Form
     //Продукты
     private async void btnAcceptProd_Click(object sender, EventArgs e)
     {
-        await _workflowHost.PublishEvent("AcceptKitchen", _workflowId, null);
+        await _workflowHost.PublishEvent("EventKitchen", _workflowId, ProductState.Accept);
         RefreshData();
     }
 
@@ -109,7 +109,11 @@ public partial class PizzeriaForm : Form
     private async void btnAcceptCor_Click(object sender, EventArgs e)
     {
         var courier = await _dbContext.Couriers.FirstOrDefaultAsync(x => x.Id == _selectedCourierId);
-        await _workflowHost.PublishEvent("AcceptCourier", _workflowId, courier?.Id);
+        await _workflowHost.PublishEvent("EventCourier", _workflowId, new EventCourier
+        {
+            CourierId = courier.Id,
+            State = CourierState.Accept
+        });
         RefreshData();
     }
 
@@ -220,6 +224,26 @@ public partial class PizzeriaForm : Form
         await _dbService.DeleteCourierAsync(_selectedCourierId ?? 0);
         _selectedCourierId = null;
         DeleteBtnsEnabled();
+        RefreshData();
+    }
+
+    private async void btnCancelKitchen_Click(object sender, EventArgs e)
+    {
+        var product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == _selectedProductId);
+        await _workflowHost.PublishEvent("EventKitchen", _workflowId, ProductState.Canceled);
+        await _dbService.ChangeProductState(product!.Id, ProductState.Canceled, _selectedClientId!.Value);
+        RefreshData();
+    }
+
+    private async void btnCancelCourier_Click(object sender, EventArgs e)
+    {
+        var courier = await _dbContext.Couriers.FirstOrDefaultAsync(x => x.Id == _selectedCourierId);
+        await _workflowHost.PublishEvent("EventCourier", _workflowId, new EventCourier
+        {
+            CourierId = courier?.Id,
+            State = CourierState.Canceled
+        });
+        await _dbService.ChangeCourierState(courier!.Id, CourierState.Canceled);
         RefreshData();
     }
 }
