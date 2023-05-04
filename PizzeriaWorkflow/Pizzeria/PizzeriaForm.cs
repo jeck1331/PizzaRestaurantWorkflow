@@ -7,6 +7,9 @@ using Pizzeria.Models.Enums;
 using Pizzeria.Services;
 using Pizzeria.Workflow;
 using WorkflowCore.Interface;
+using WorkflowCore.Models;
+using WorkflowCore.Persistence.EntityFramework.Services;
+using WorkflowCore.Persistence.SqlServer;
 
 namespace Pizzeria;
 
@@ -48,6 +51,17 @@ public partial class PizzeriaForm : Form
         RefreshData();
     }
 
+    private async Task RunWorkflowAsync(DataPizza t)
+    {
+        await Task.Run(() =>
+        {
+            _workflowId = _workflowHost.StartWorkflow(_currentWorkflowId, t).Result;
+        });
+        lblWorkflowId.Text = _workflowId;
+        await _dbService.AddNewWorkflow(new WorkflowProcess { InstanceId = _workflowId, WorkflowName = _currentWorkflowId, Status = WorkflowStatus.Runnable });
+        RefreshData();
+    }
+
     private async void btnAddProduct_Click(object sender, EventArgs e)
     {
         if (_selectedClientId != null)
@@ -62,7 +76,7 @@ public partial class PizzeriaForm : Form
                     ClientId = _selectedClientId ?? 0,
                     ProductId = product.Id
                 };
-                _workflowId = _workflowHost.StartWorkflow(_currentWorkflowId, t).Result;
+                await RunWorkflowAsync(t);
             }
         }
     }
@@ -197,10 +211,12 @@ public partial class PizzeriaForm : Form
         var couriers = await _dbService.Couriers();
         var products = await _dbService.Products();
         var clients = await _dbService.Clients();
+        var workflows = await _dbService.GetRunningInstances();
 
         dataCouriers.DataSource = _mapper.Map<List<CourierDTO>>(couriers);
         dataProducts.DataSource = _mapper.Map<List<ProductDTO>>(products);
         dataClients.DataSource = _mapper.Map<List<ClientDTO>>(clients);
+        dgvWorkflowsRunning.DataSource = workflows;
     }
 
     private async void btnDelClient_Click(object sender, EventArgs e)
@@ -245,5 +261,25 @@ public partial class PizzeriaForm : Form
         });
         await _dbService.ChangeCourierState(courier!.Id, CourierState.Canceled);
         RefreshData();
+    }
+
+    private async void btnStatus_Click(object sender, EventArgs e)
+    {
+        if (dgvWorkflowsRunning.CurrentRow is not null)
+        {
+            var workflow = (WorkflowProcess)dgvWorkflowsRunning.CurrentRow.DataBoundItem;
+            _workflowId = workflow.InstanceId;
+            lblWorkflowId.Text = _workflowId;
+        }
+
+        var t = await _workflowHost.PersistenceStore.GetRunnableInstances(new DateTime(2023,5,5));
+        var t1 = t.ToList();
+
+        var s = await _workflowHost.PersistenceStore.GetWorkflowInstance(_workflowId);
+    }
+
+    private void PizzeriaForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+
     }
 }

@@ -30,6 +30,8 @@ partial class PizzeriaForm
     private void InitializeComponent()
     {
         groupBox1 = new GroupBox();
+        lblWorkflowId = new Label();
+        label9 = new Label();
         boxCouriersState = new GroupBox();
         btnCancelCourier = new Button();
         label5 = new Label();
@@ -55,6 +57,8 @@ partial class PizzeriaForm
         label1 = new Label();
         btnAddClient = new Button();
         groupBox2 = new GroupBox();
+        dgvWorkflowsRunning = new DataGridView();
+        btnStatus = new Button();
         btnDelCourier = new Button();
         btnDelProduct = new Button();
         btnDelClient = new Button();
@@ -75,6 +79,7 @@ partial class PizzeriaForm
         boxProductAdd.SuspendLayout();
         boxClientAdd.SuspendLayout();
         groupBox2.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)dgvWorkflowsRunning).BeginInit();
         ((System.ComponentModel.ISupportInitialize)dataProducts).BeginInit();
         ((System.ComponentModel.ISupportInitialize)dataCouriers).BeginInit();
         ((System.ComponentModel.ISupportInitialize)dataClients).BeginInit();
@@ -82,6 +87,8 @@ partial class PizzeriaForm
         // 
         // groupBox1
         // 
+        groupBox1.Controls.Add(lblWorkflowId);
+        groupBox1.Controls.Add(label9);
         groupBox1.Controls.Add(boxCouriersState);
         groupBox1.Controls.Add(btnChangeStates);
         groupBox1.Controls.Add(boxKithcenState);
@@ -95,6 +102,24 @@ partial class PizzeriaForm
         groupBox1.TabIndex = 0;
         groupBox1.TabStop = false;
         groupBox1.Text = "Функции и состояния";
+        // 
+        // lblWorkflowId
+        // 
+        lblWorkflowId.AutoSize = true;
+        lblWorkflowId.Font = new Font("Times New Roman", 9.75F, FontStyle.Underline, GraphicsUnit.Point);
+        lblWorkflowId.Location = new Point(140, 317);
+        lblWorkflowId.Name = "lblWorkflowId";
+        lblWorkflowId.Size = new Size(0, 15);
+        lblWorkflowId.TabIndex = 9;
+        // 
+        // label9
+        // 
+        label9.AutoSize = true;
+        label9.Location = new Point(7, 317);
+        label9.Name = "label9";
+        label9.Size = new Size(127, 15);
+        label9.TabIndex = 8;
+        label9.Text = "Выбран процесс с Id: ";
         // 
         // boxCouriersState
         // 
@@ -332,6 +357,8 @@ partial class PizzeriaForm
         // 
         // groupBox2
         // 
+        groupBox2.Controls.Add(dgvWorkflowsRunning);
+        groupBox2.Controls.Add(btnStatus);
         groupBox2.Controls.Add(btnDelCourier);
         groupBox2.Controls.Add(btnDelProduct);
         groupBox2.Controls.Add(btnDelClient);
@@ -347,10 +374,29 @@ partial class PizzeriaForm
         groupBox2.Controls.Add(dataClients);
         groupBox2.Location = new Point(433, 12);
         groupBox2.Name = "groupBox2";
-        groupBox2.Size = new Size(784, 476);
+        groupBox2.Size = new Size(784, 596);
         groupBox2.TabIndex = 1;
         groupBox2.TabStop = false;
         groupBox2.Text = "Данные";
+        // 
+        // dgvWorkflowsRunning
+        // 
+        dgvWorkflowsRunning.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        dgvWorkflowsRunning.Location = new Point(297, 358);
+        dgvWorkflowsRunning.Name = "dgvWorkflowsRunning";
+        dgvWorkflowsRunning.RowTemplate.Height = 25;
+        dgvWorkflowsRunning.Size = new Size(470, 112);
+        dgvWorkflowsRunning.TabIndex = 17;
+        // 
+        // btnStatus
+        // 
+        btnStatus.Location = new Point(297, 323);
+        btnStatus.Name = "btnStatus";
+        btnStatus.Size = new Size(199, 23);
+        btnStatus.TabIndex = 16;
+        btnStatus.Text = "Выбрать рабочий процесс";
+        btnStatus.UseVisualStyleBackColor = true;
+        btnStatus.Click += btnStatus_Click;
         // 
         // btnDelCourier
         // 
@@ -493,12 +539,14 @@ partial class PizzeriaForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(1221, 500);
+        ClientSize = new Size(1221, 622);
         Controls.Add(groupBox2);
         Controls.Add(groupBox1);
         Name = "PizzeriaForm";
         Text = "Workflow";
+        FormClosing += PizzeriaForm_FormClosing;
         groupBox1.ResumeLayout(false);
+        groupBox1.PerformLayout();
         boxCouriersState.ResumeLayout(false);
         boxCouriersState.PerformLayout();
         boxKithcenState.ResumeLayout(false);
@@ -511,6 +559,7 @@ partial class PizzeriaForm
         boxClientAdd.PerformLayout();
         groupBox2.ResumeLayout(false);
         groupBox2.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)dgvWorkflowsRunning).EndInit();
         ((System.ComponentModel.ISupportInitialize)dataProducts).EndInit();
         ((System.ComponentModel.ISupportInitialize)dataCouriers).EndInit();
         ((System.ComponentModel.ISupportInitialize)dataClients).EndInit();
@@ -561,4 +610,8 @@ partial class PizzeriaForm
     private Button btnDelClient;
     private Button btnCancelCourier;
     private Button btnCancelKitchen;
+    private Button btnStatus;
+    private Label lblWorkflowId;
+    private Label label9;
+    private DataGridView dgvWorkflowsRunning;
 }

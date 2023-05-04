@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pizzeria.Models;
+using Pizzeria.Services;
 
 namespace Pizzeria;
 
@@ -8,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<Client> Clients { get; set; } = null!;
     public DbSet<Courier> Couriers { get; set; } = null!;
+    public DbSet<WorkflowProcess> WorkflowProcesses { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -24,6 +26,9 @@ public class AppDbContext : DbContext
     {
         modelBuilder.Entity<Client>()
             .HasKey(x => x.Id);
+
+        modelBuilder.Entity<WorkflowProcess>()
+            .HasKey(x => x.PersistenceId);
         
         modelBuilder.Entity<Courier>()
             .HasKey(x => x.Id);
