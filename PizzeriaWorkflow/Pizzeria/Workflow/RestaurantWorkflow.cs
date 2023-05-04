@@ -40,7 +40,6 @@ public class RestaurantWorkflow : IWorkflow<DataPizza>
                                             )
                                 )
                 )
-            .Then<EndStep>()
             .EndWorkflow();
     }
 

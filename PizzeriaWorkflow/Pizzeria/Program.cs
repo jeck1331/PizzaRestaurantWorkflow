@@ -46,7 +46,7 @@ static class Program
                 services.AddTransient<OrderStep>();
                 services.AddTransient<CookingStep>();
                 services.AddTransient<DeliveryStep>();
-                services.AddTransient<EndStep>();
+                services.AddSingleton<CancellationTokenSource>();
 
                 services.AddTransient<DBService>();
                 services.AddTransient<PizzeriaForm>();

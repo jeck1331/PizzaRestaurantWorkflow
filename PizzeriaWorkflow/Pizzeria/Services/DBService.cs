@@ -93,21 +93,4 @@ public class DBService
     public async Task<List<Product>> Products() => await _dbContext.Products.AsNoTracking().ToListAsync();
     public async Task<List<Client>> Clients() => await _dbContext.Clients.AsNoTracking().ToListAsync();
     public async Task<List<Courier>> Couriers() => await _dbContext.Couriers.AsNoTracking().ToListAsync();
-
-    public async Task AddNewWorkflow(WorkflowProcess process)
-    {
-        _dbContext.WorkflowProcesses.Add(process);
-        await _dbContext.SaveChangesAsync();
-    }
-
-    public async Task<List<WorkflowProcess>> GetRunningInstances() => await _dbContext.WorkflowProcesses.AsNoTracking()
-        .Where(x => x.Status == WorkflowStatus.Runnable).ToListAsync();
-
-    public async Task ChangeWorkflowInstanceStatus(string id, WorkflowStatus newStatus)
-    {
-        var process = await _dbContext.WorkflowProcesses.FirstOrDefaultAsync(x => x.InstanceId == id);
-        process!.Status = newStatus;
-        _dbContext.WorkflowProcesses.Update(process);
-        await _dbContext.SaveChangesAsync();
-    }
 }

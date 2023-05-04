@@ -8,8 +8,7 @@ using Pizzeria.Services;
 using Pizzeria.Workflow;
 using WorkflowCore.Interface;
 using WorkflowCore.Models;
-using WorkflowCore.Persistence.EntityFramework.Services;
-using WorkflowCore.Persistence.SqlServer;
+using WorkflowCore.Services;
 
 namespace Pizzeria;
 
@@ -19,6 +18,8 @@ public partial class PizzeriaForm : Form
     private readonly IWorkflowHost _workflowHost;
     private readonly DBService _dbService;
     private readonly IMapper _mapper;
+    private readonly CancellationTokenSource _cancellationTokenSource;
+
 
     private string _currentWorkflowId = "RestaurantWorkflow";
     private string _workflowId = "";
@@ -26,7 +27,7 @@ public partial class PizzeriaForm : Form
     private int? _selectedProductId = null;
     private int? _selectedClientId = null;
 
-    public PizzeriaForm(AppDbContext dbContext, DBService dbService, IServiceProvider serviceProvider, IMapper mapper)
+    public PizzeriaForm(AppDbContext dbContext, DBService dbService, IServiceProvider serviceProvider, IMapper mapper, CancellationTokenSource cancellationTokenSource)
     {
         _workflowHost = serviceProvider.GetService<IWorkflowHost>();
         _workflowHost?.RegisterWorkflow<RestaurantWorkflow, DataPizza>();
@@ -35,6 +36,7 @@ public partial class PizzeriaForm : Form
         _dbContext = dbContext;
         _dbService = dbService;
         _mapper = mapper;
+        _cancellationTokenSource = cancellationTokenSource;
 
         InitializeComponent();
     }
@@ -53,12 +55,8 @@ public partial class PizzeriaForm : Form
 
     private async Task RunWorkflowAsync(DataPizza t)
     {
-        await Task.Run(() =>
-        {
-            _workflowId = _workflowHost.StartWorkflow(_currentWorkflowId, t).Result;
-        });
+        await Task.Run(() => { _workflowId = _workflowHost.StartWorkflow(_currentWorkflowId, t).Result; });
         lblWorkflowId.Text = _workflowId;
-        await _dbService.AddNewWorkflow(new WorkflowProcess { InstanceId = _workflowId, WorkflowName = _currentWorkflowId, Status = WorkflowStatus.Runnable });
         RefreshData();
     }
 
@@ -178,6 +176,7 @@ public partial class PizzeriaForm : Form
         lbCourier.Text = _selectedCourierId == null ? "" : _selectedCourierId.ToString();
         lbProduct.Text = _selectedProductId == null ? "" : _selectedProductId.ToString();
     }
+
     private void dataCouriers_MouseClick(object sender, MouseEventArgs e)
     {
         var courier = (CourierDTO)dataCouriers.CurrentRow.DataBoundItem;
@@ -211,7 +210,7 @@ public partial class PizzeriaForm : Form
         var couriers = await _dbService.Couriers();
         var products = await _dbService.Products();
         var clients = await _dbService.Clients();
-        var workflows = await _dbService.GetRunningInstances();
+        var workflows = await GetRunnableInstances();
 
         dataCouriers.DataSource = _mapper.Map<List<CourierDTO>>(couriers);
         dataProducts.DataSource = _mapper.Map<List<ProductDTO>>(products);
@@ -267,19 +266,26 @@ public partial class PizzeriaForm : Form
     {
         if (dgvWorkflowsRunning.CurrentRow is not null)
         {
-            var workflow = (WorkflowProcess)dgvWorkflowsRunning.CurrentRow.DataBoundItem;
-            _workflowId = workflow.InstanceId;
+            var workflow = (WorkflowInstance)dgvWorkflowsRunning.CurrentRow.DataBoundItem;
+            _workflowId = workflow.Id;
             lblWorkflowId.Text = _workflowId;
         }
 
-        var t = await _workflowHost.PersistenceStore.GetRunnableInstances(new DateTime(2023,5,5));
-        var t1 = t.ToList();
+        var tqweq = await _workflowHost.PersistenceStore.GetRunnableInstances(DateTime.MaxValue);
 
-        var s = await _workflowHost.PersistenceStore.GetWorkflowInstance(_workflowId);
+        var t = (await _workflowHost.PersistenceStore.GetRunnableInstances(DateTime.Now, default)).ToList();
+        var s = await GetRunnableInstances();
+        
+        
     }
 
     private void PizzeriaForm_FormClosing(object sender, FormClosingEventArgs e)
     {
-
     }
+
+    [Obsolete("GetRunnableInstances")]
+    private async Task<List<WorkflowInstance>> GetRunnableInstances() =>
+        (await _workflowHost.PersistenceStore.GetWorkflowInstances(WorkflowStatus.Runnable, "",
+            new DateTime(2023, 5, 3),
+            null, 0, 100)).ToList();
 }
