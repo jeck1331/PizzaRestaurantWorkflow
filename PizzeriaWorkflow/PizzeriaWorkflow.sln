@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaWorkflow", "PizzeriaWorkflow\PizzeriaWorkflow.csproj", "{EEC22F0D-B080-471B-9314-268A5E80D689}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria", "Pizzeria\Pizzeria.csproj", "{EEC22F0D-B080-471B-9314-268A5E80D689}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWorkflow", "TestWorkflow\TestWorkflow.csproj", "{47E3ACFD-569C-4DAC-8101-DF8BFF0BBDEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaWorkflow.UnitTest", "PizzeriaWorkflow.UnitTest\PizzeriaWorkflow.UnitTest.csproj", "{8AB923CC-1887-44A9-B40B-78733ADDF6C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.UnitTest", "Pizzeria.UnitTest\Pizzeria.UnitTest.csproj", "{8AB923CC-1887-44A9-B40B-78733ADDF6C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
