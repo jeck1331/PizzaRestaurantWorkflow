@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Pizzeria.Mapping;
@@ -12,14 +12,14 @@ using Xunit.Abstractions;
 
 namespace Pizzeria.UnitTest;
 
-public class WorkflowTest : WorkflowTest<RestaurantWorkflow, DataPizza>
+public class WorkflowTest2 : WorkflowTest<RestaurantWorkflow, DataPizza>
 {
     private readonly ITestOutputHelper _testOutputHelper;
     private const string connectionString = "Server=.;Database=TestPizza;Trusted_Connection=True;TrustServerCertificate=True;";
     private ServiceProvider? _provider;
     private IMapper _mapper;
     
-    public WorkflowTest(ITestOutputHelper testOutputHelper)
+    public WorkflowTest2(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
         Setup();
@@ -47,16 +47,16 @@ public class WorkflowTest : WorkflowTest<RestaurantWorkflow, DataPizza>
     }
 
     [Fact]
-    public async Task OrderPizza()
+    public async Task OrderPizza2()
     {
         using var _dbContext = _provider!.GetRequiredService<AppDbContext>();
         var _dbService = _provider!.GetService<DBService>();
         
-        int _selectedCourierId = 2;
+        int _selectedCourierId = 4;
         int _selectedProductId;
-        int _selectedClientId = 1;
+        int _selectedClientId = 3;
         
-        var creatingProduct = new Product { Name = "Пепперони" };
+        var creatingProduct = new Product { Name = "Грибная" };
         
         await _dbService.CreateProductAsync(creatingProduct);
         var product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Name == creatingProduct.Name);
