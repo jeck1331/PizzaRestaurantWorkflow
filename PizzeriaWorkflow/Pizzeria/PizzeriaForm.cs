@@ -8,7 +8,6 @@ using Pizzeria.Services;
 using Pizzeria.Workflow;
 using WorkflowCore.Interface;
 using WorkflowCore.Models;
-using WorkflowCore.Services;
 
 namespace Pizzeria;
 
@@ -18,7 +17,6 @@ public partial class PizzeriaForm : Form
     private readonly IWorkflowHost _workflowHost;
     private readonly DBService _dbService;
     private readonly IMapper _mapper;
-    private readonly CancellationTokenSource _cancellationTokenSource;
 
 
     private string _currentWorkflowId = "RestaurantWorkflow";
@@ -27,7 +25,7 @@ public partial class PizzeriaForm : Form
     private int? _selectedProductId = null;
     private int? _selectedClientId = null;
 
-    public PizzeriaForm(AppDbContext dbContext, DBService dbService, IServiceProvider serviceProvider, IMapper mapper, CancellationTokenSource cancellationTokenSource)
+    public PizzeriaForm(AppDbContext dbContext, DBService dbService, IServiceProvider serviceProvider, IMapper mapper)
     {
         _workflowHost = serviceProvider.GetService<IWorkflowHost>();
         _workflowHost?.RegisterWorkflow<RestaurantWorkflow, DataPizza>();
@@ -36,7 +34,6 @@ public partial class PizzeriaForm : Form
         _dbContext = dbContext;
         _dbService = dbService;
         _mapper = mapper;
-        _cancellationTokenSource = cancellationTokenSource;
 
         InitializeComponent();
     }
@@ -270,13 +267,6 @@ public partial class PizzeriaForm : Form
             _workflowId = workflow.Id;
             lblWorkflowId.Text = _workflowId;
         }
-
-        var tqweq = await _workflowHost.PersistenceStore.GetRunnableInstances(DateTime.MaxValue);
-
-        var t = (await _workflowHost.PersistenceStore.GetRunnableInstances(DateTime.Now, default)).ToList();
-        var s = await GetRunnableInstances();
-        
-        
     }
 
     private void PizzeriaForm_FormClosing(object sender, FormClosingEventArgs e)

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pizzeria.Models;
 using Pizzeria.Models.Enums;
-using WorkflowCore.Models;
 
 namespace Pizzeria.Services;
 
@@ -28,6 +27,11 @@ public class DBService
 
     public async Task CreateProductAsync(Product product)
     {
+        if (_dbContext.Products.Any(x => x.Name == product.Name))
+        {
+            var item = await _dbContext.Products.FirstOrDefaultAsync(x => x.Name == product.Name);
+            _dbContext.Remove(item!);
+        }
         _dbContext.Products.Add(product);
         await _dbContext.SaveChangesAsync();
     }

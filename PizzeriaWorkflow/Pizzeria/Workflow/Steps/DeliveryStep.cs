@@ -61,7 +61,6 @@ public class DeliveryStep: BaseStep
         
         Success = CourierState == CourierState.Done && ProductState == ProductState.Completed;
         Message = Success ? "Продукт успешно доставлен!" : "Время доставки истекло, курьер не справился с задачей, поэтому заказ был отменен";
-        MessageBox.Show(Message);
         
         CourierState = CourierState.Free;
         await DbService.ChangeCourierState(CourierId, CourierState);
